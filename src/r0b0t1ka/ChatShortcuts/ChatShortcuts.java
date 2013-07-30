@@ -59,7 +59,7 @@ public final class ChatShortcuts extends JavaPlugin
             if (!dirMake)
                 getLogger().info("OK, something is wrong, plugin couldn't create plugin.yml");
             PrintWriter writing = new PrintWriter(new File (filepath + "\\plugins\\ChatShortcuts\\commands.yml"));
-            writing.println("eg|ChatShortcuts command example!|eg");            
+            writing.println("eg|ChatShortcuts command example!|eg|orange||");            
             writing.close();
         }
         PrintWriter writer = new PrintWriter(new File(filepath + "\\plugins\\ChatShortcuts\\plugin.yml"));
@@ -128,6 +128,8 @@ public final class ChatShortcuts extends JavaPlugin
         ArrayList<String> commands = new ArrayList<>();
         ArrayList<String> say = new ArrayList<>();
         ArrayList<String> perm = new ArrayList<>();
+        ArrayList<String> color = new ArrayList<>();
+        ArrayList<String> style = new ArrayList<>();
         File file = new File("wtf.txt");
         String filepath = null;
         try {
@@ -153,11 +155,69 @@ public final class ChatShortcuts extends JavaPlugin
             index = cmds.indexOf("|");
             String cmdSay = cmds.substring(0, index);
             say.add(cmdSay);
+            cmds = cmds.substring(index + 1);
             perm.add("ChatShortcuts." + cmdN);
+            index = cmds.indexOf("|");
+            cmds = cmds.substring(index + 1);
+            index = cmds.indexOf("|");
+            String colour = cmds.substring(0, index);
+            if (colour.equals("darkblue"))
+                    colour = "§1";
+            else if (colour.equals("black"))
+                    colour = "§0";
+            else if (colour.equals("darkgreen"))            
+                    colour = "§2";
+            else if (colour.equals("darkaqua"))
+                    colour = "§3";
+            else if (colour.equals("darkred"))
+                    colour = "§4";
+            else if (colour.equals("purple"))
+                    colour = "§5";
+            else if (colour.equals("orange"))
+                    colour = "§6";
+            else if (colour.equals("grey"))
+                    colour = "§7";
+            else if (colour.equals("darkgrey"))
+                    colour = "§8";
+            else if (colour.equals("indigo"))
+                    colour = "§9";
+            else if (colour.equals("brightgreen"))
+                    colour = "§A";
+            else if (colour.equals("aqua"))
+                    colour = "§B";
+            else if (colour.equals("red"))
+                    colour = "§C";
+            else if (colour.equals("pink"))
+                    colour = "§D";
+            else if (colour.equals("yellow"))
+                    colour = "§E";
+            else if (colour.equals("white"))
+                    colour = "§F";
+            else
+                    colour = "§F";
+            color.add(colour);
+            cmds = cmds.substring(index + 1);
+            index = cmds.indexOf("|");
+            String txtstyle = cmds.substring(0, index);
+            if (txtstyle.equals("random")) 
+                    txtstyle = "§K";
+            else if (txtstyle.equals("bold"))
+                    txtstyle = "§L";
+            else if (txtstyle.equals("strike"))
+                    txtstyle = "§M";
+            else if (txtstyle.equals("underline"))
+                    txtstyle = "§N";
+            else if (txtstyle.equals("italics"))
+                    txtstyle = "§O";
+            else
+                    txtstyle = "";
+            style.add(txtstyle);
         }
         commands.trimToSize();
         say.trimToSize();
         perm.trimToSize();
+        color.trimToSize();
+        style.trimToSize();
         for (int counter = 0; counter < commands.size(); counter++)
         {
             if (cmd.getName().equalsIgnoreCase(commands.get(counter)))
@@ -173,8 +233,7 @@ public final class ChatShortcuts extends JavaPlugin
                     Player player = (Player) sender;
                     if (player.hasPermission(perm.get(counter)))
                     {
-                        String name = player.getName();
-                        player.chat(say.get(counter));
+                        player.chat("§R" + color.get(counter) + style.get(counter) + say.get(counter));
                         command = true;
                     }
                     else

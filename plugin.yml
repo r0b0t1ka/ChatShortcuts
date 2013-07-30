@@ -1,4 +1,10 @@
 name: ChatShortcuts
 main: r0b0t1ka.ChatShortcuts.ChatShortcuts
-version: 0.1
+version: 1.2
 author: r0b0t1ka
+commands:
+   eg:
+      description: plugin command example!
+      usage: /eg
+      permission: ChatShortcuts.eg
+      permission-message: You don't have <permission>!
