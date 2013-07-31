@@ -1,19 +1,10 @@
 name: ChatShortcuts
 main: r0b0t1ka.ChatShortcuts.ChatShortcuts
-<<<<<<< HEAD
 version: 1.2
-=======
-version: 1.1
->>>>>>> a1676d4d6bfc56542e6d672c12e784f3140b13a5
 author: r0b0t1ka
 commands:
    eg:
       description: plugin command example!
       usage: /eg
-<<<<<<< HEAD
       permission: ChatShortcuts.eg
       permission-message: You don't have <permission>!
-=======
-      permission: BasicPlugin.eg
-      permission-message: You don't have <permission>!
->>>>>>> a1676d4d6bfc56542e6d672c12e784f3140b13a5

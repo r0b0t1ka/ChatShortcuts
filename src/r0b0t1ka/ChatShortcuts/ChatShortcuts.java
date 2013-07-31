@@ -58,59 +58,58 @@ public final class ChatShortcuts extends JavaPlugin
             dirMake = new File(filepath + "\\plugins\\ChatShortcuts\\plugin.yml").createNewFile();
             if (!dirMake)
                 getLogger().info("OK, something is wrong, plugin couldn't create plugin.yml");
-            PrintWriter writing = new PrintWriter(new File (filepath + "\\plugins\\ChatShortcuts\\commands.yml"));
-            writing.println("eg|ChatShortcuts command example!|eg|orange||");            
-            writing.close();
+            try (PrintWriter writing = new PrintWriter(new File (filepath + "\\plugins\\ChatShortcuts\\commands.yml"))) {
+                writing.println("eg|ChatShortcuts command example!|eg|orange||console|player|");
+            }
         }
-        PrintWriter writer = new PrintWriter(new File(filepath + "\\plugins\\ChatShortcuts\\plugin.yml"));
-        writer.println("name: ChatShortcuts");
-        writer.println("main: r0b0t1ka.ChatShortcuts.ChatShortcuts");
-        writer.println("version: 0.1");
-        writer.println("author: r0b0t1ka");
-        writer.println("commands:");
-        ArrayList<String> commands = new ArrayList<>();  
-        Scanner in = new Scanner(new File(filepath + "\\plugins\\ChatShortcuts\\commands.yml"));
-       // if (checkd.equalsIgnoreCase(""))
-        while(in.hasNextLine())
-        {
-            String fileIn = in.nextLine();
-            commands.add(fileIn);
+        Scanner in;
+        try (PrintWriter writer = new PrintWriter(new File(filepath + "\\plugins\\ChatShortcuts\\plugin.yml"))) {
+            writer.println("name: ChatShortcuts");
+            writer.println("main: r0b0t1ka.ChatShortcuts.ChatShortcuts");
+            writer.println("version: 1.3");
+            writer.println("author: r0b0t1ka");
+            writer.println("commands:");
+            ArrayList<String> commands = new ArrayList<>();
+            in = new Scanner(new File(filepath + "\\plugins\\ChatShortcuts\\commands.yml"));
+            while(in.hasNextLine())
+            {
+                String fileIn = in.nextLine();
+                commands.add(fileIn);
+            }
+            commands.trimToSize();
+            String[] cmds = new String[commands.size()];
+            String[] cmdName = new String[commands.size()];
+            String[] cmdDesc = new String[commands.size()];
+            String[] cmdUsag = new String[commands.size()];
+            String[] cmdPerm = new String[commands.size()];
+            String[] cmdPerM = new String[commands.size()];
+            for (int counter = 0; counter < cmds.length; counter++)
+            {
+                cmds[counter] = commands.get(counter);
+            }
+            for (int counter = 0; counter < cmds.length; counter++)
+            {
+                int index = cmds[counter].indexOf("|");
+                cmdName[counter] = cmds[counter].substring(0, index);
+                cmds[counter] = cmds[counter].substring((index) + 1);
+                index = cmds[counter].indexOf("|");
+                cmdDesc[counter] = cmds[counter].substring(0, index);
+                cmds[counter] = cmds[counter].substring((index) + 1);
+                cmdUsag[counter] = ("/" + cmdName[counter]);
+                cmdPerm[counter] = ("ChatShortcuts." + cmdName[counter]);
+                cmdPerM[counter] = ("You don't have <permission>!");
+            }
+            for (int counter = 0; counter < cmdName.length; counter++)
+            {
+                writer.println("   " + cmdName[counter] + ":");
+                writer.println("      description: " + cmdDesc[counter]);
+                writer.println("      usage: " + cmdUsag[counter]);
+                writer.println("      permission: " + cmdPerm[counter]);
+                writer.println("      permission-message: " + cmdPerM[counter]);
+            }
+            getLogger().info("ChatShortcuts has successfully written the plugin.yml file!");
+            getLogger().info("Plugin.yml must be placed into the root folder of the plugin jar");
         }
-        commands.trimToSize();
-        String[] cmds = new String[commands.size()];
-        String[] cmdName = new String[commands.size()];
-        String[] cmdDesc = new String[commands.size()];
-        String[] cmdUsag = new String[commands.size()];
-        String[] cmdPerm = new String[commands.size()];
-        String[] cmdPerM = new String[commands.size()];
-        
-        for (int counter = 0; counter < cmds.length; counter++)
-        {
-            cmds[counter] = commands.get(counter);
-        }
-        for (int counter = 0; counter < cmds.length; counter++)
-        {
-            int index = cmds[counter].indexOf("|");
-            cmdName[counter] = cmds[counter].substring(0, index);
-            cmds[counter] = cmds[counter].substring((index) + 1);
-            index = cmds[counter].indexOf("|");
-            cmdDesc[counter] = cmds[counter].substring(0, index);
-            cmds[counter] = cmds[counter].substring((index) + 1);
-            cmdUsag[counter] = ("/" + cmdName[counter]);
-            cmdPerm[counter] = ("ChatShortcuts." + cmdName[counter]);
-            cmdPerM[counter] = ("You don't have <permission>!");
-        }
-        for (int counter = 0; counter < cmdName.length; counter++)
-        {
-            writer.println("   " + cmdName[counter] + ":");
-            writer.println("      description: " + cmdDesc[counter]);
-            writer.println("      usage: " + cmdUsag[counter]);
-            writer.println("      permission: " + cmdPerm[counter]);
-            writer.println("      permission-message: " + cmdPerM[counter]);
-        }
-        getLogger().info("ChatShortcuts has successfully written the plugin.yml file!");
-        getLogger().info("Plugin.yml must be placed into the root folder of the plugin jar");
-        writer.close();
         in.close();
     }    
     /**
@@ -130,6 +129,8 @@ public final class ChatShortcuts extends JavaPlugin
         ArrayList<String> perm = new ArrayList<>();
         ArrayList<String> color = new ArrayList<>();
         ArrayList<String> style = new ArrayList<>();
+        ArrayList<Boolean> con = new ArrayList<>();
+        ArrayList<Boolean> play = new ArrayList<>();
         File file = new File("wtf.txt");
         String filepath = null;
         try {
@@ -161,84 +162,141 @@ public final class ChatShortcuts extends JavaPlugin
             cmds = cmds.substring(index + 1);
             index = cmds.indexOf("|");
             String colour = cmds.substring(0, index);
-            if (colour.equals("darkblue"))
+            switch (colour) {
+                case "darkblue":
                     colour = "§1";
-            else if (colour.equals("black"))
+                    break;
+                case "black":
                     colour = "§0";
-            else if (colour.equals("darkgreen"))            
+                    break;            
+                case "darkgreen":
                     colour = "§2";
-            else if (colour.equals("darkaqua"))
+                    break;
+                case "darkaqua":
                     colour = "§3";
-            else if (colour.equals("darkred"))
+                    break;
+                case "darkred":
                     colour = "§4";
-            else if (colour.equals("purple"))
+                    break;
+                case "purple":
                     colour = "§5";
-            else if (colour.equals("orange"))
+                    break;
+                case "orange":
                     colour = "§6";
-            else if (colour.equals("grey"))
+                    break;
+                case "grey":
                     colour = "§7";
-            else if (colour.equals("darkgrey"))
+                    break;
+                case "darkgrey":
                     colour = "§8";
-            else if (colour.equals("indigo"))
+                    break;
+                case "indigo":
                     colour = "§9";
-            else if (colour.equals("brightgreen"))
+                    break;
+                case "brightgreen":
                     colour = "§A";
-            else if (colour.equals("aqua"))
+                    break;
+                case "aqua":
                     colour = "§B";
-            else if (colour.equals("red"))
+                    break;
+                case "red":
                     colour = "§C";
-            else if (colour.equals("pink"))
+                    break;
+                case "pink":
                     colour = "§D";
-            else if (colour.equals("yellow"))
+                    break;
+                case "yellow":
                     colour = "§E";
-            else if (colour.equals("white"))
+                    break;
+                case "white":
                     colour = "§F";
-            else
+                    break;
+                default:
                     colour = "§F";
+                    break;
+            }
             color.add(colour);
             cmds = cmds.substring(index + 1);
             index = cmds.indexOf("|");
             String txtstyle = cmds.substring(0, index);
-            if (txtstyle.equals("random")) 
+            switch (txtstyle) { 
+                case "random":
                     txtstyle = "§K";
-            else if (txtstyle.equals("bold"))
+                    break;
+                case "bold":
                     txtstyle = "§L";
-            else if (txtstyle.equals("strike"))
+                    break;
+                case "strike":
                     txtstyle = "§M";
-            else if (txtstyle.equals("underline"))
+                    break;
+                case "underline":
                     txtstyle = "§N";
-            else if (txtstyle.equals("italics"))
+                    break;
+                case "italics":
                     txtstyle = "§O";
-            else
+                    break;
+                default:
                     txtstyle = "";
+                    break;
+            }
             style.add(txtstyle);
+            cmds = cmds.substring(index + 1);
+            index = cmds.indexOf("|");
+            String consoletruth = cmds.substring(0, index);
+            if (consoletruth.equals("console"))
+                con.add(true);
+            else
+                con.add(false);
+            cmds = cmds.substring(index + 1);
+            index = cmds.indexOf("|");
+            String playertruth = cmds.substring(0, index);
+            if (playertruth.equals("player"))
+                play.add(true);
+            else
+                play.add(false);
         }
         commands.trimToSize();
         say.trimToSize();
         perm.trimToSize();
         color.trimToSize();
         style.trimToSize();
+        con.trimToSize();
+        play.trimToSize();
         for (int counter = 0; counter < commands.size(); counter++)
         {
             if (cmd.getName().equalsIgnoreCase(commands.get(counter)))
             {
-                if (!(sender instanceof Player))
+                if (!(sender instanceof Player) && con.get(counter))
                 {
-                    sender.sendMessage("This command is for players only!");
-                    sender.sendMessage("Use the say command, lazy!");
+                    cmd.broadcastCommandMessage(sender, color.get(counter) + style.get(counter) + say.get(counter));
+                    command = true;
+                }
+                else if (!(sender instanceof Player) && !(con.get(counter)))
+                {
+                    sender.sendMessage("This command is for players only -_-");
                     command = false;
                 }
                 else
                 {
                     Player player = (Player) sender;
-                    if (player.hasPermission(perm.get(counter)))
+                    if (player.hasPermission(perm.get(counter)) && play.get(counter))
                     {
                         player.chat("§R" + color.get(counter) + style.get(counter) + say.get(counter));
                         command = true;
                     }
-                    else
+                    else if (player.hasPermission(perm.get(counter)) && !(play.get(counter)))
                     {
-                        sender.sendMessage("You don't have permission to use this.");
+                        sender.sendMessage("This command is for the console only");
+                        command = false;
+                    }
+                    else if (!player.hasPermission(perm.get(counter)) && !(play.get(counter)))
+                    {
+                        sender.sendMessage("You don't have permission to use this and it's for the console only.");
+                        command = false;
+                    }
+                    else if (!player.hasPermission(perm.get(counter)) && !(play.get(counter)))
+                    {
+                        sender.sendMessage("You don't have permission to use this command.");
                         command = false;
                     }
                 }
