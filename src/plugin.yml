@@ -1,6 +1,6 @@
 name: ChatShortcuts
 main: r0b0t1ka.ChatShortcuts.ChatShortcuts
-version: 1.2
+version: 1.4
 author: r0b0t1ka
 commands:
    eg:

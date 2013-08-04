@@ -59,7 +59,7 @@ public final class ChatShortcuts extends JavaPlugin
             if (!dirMake)
                 getLogger().info("OK, something is wrong, plugin couldn't create plugin.yml");
             try (PrintWriter writing = new PrintWriter(new File (filepath + "\\plugins\\ChatShortcuts\\commands.yml"))) {
-                writing.println("eg|ChatShortcuts command example!|eg|orange||console|player|");
+                writing.println("eg|ChatShortcuts command example!|eg|orange||console|player||");
             }
         }
         Scanner in;
@@ -131,6 +131,7 @@ public final class ChatShortcuts extends JavaPlugin
         ArrayList<String> style = new ArrayList<>();
         ArrayList<Boolean> con = new ArrayList<>();
         ArrayList<Boolean> play = new ArrayList<>();
+        ArrayList<Boolean> anon = new ArrayList<>();
         File file = new File("wtf.txt");
         String filepath = null;
         try {
@@ -254,6 +255,13 @@ public final class ChatShortcuts extends JavaPlugin
                 play.add(true);
             else
                 play.add(false);
+            cmds = cmds.substring(index + 1);
+            index = cmds.indexOf("|");
+            String anony = cmds.substring(0, index);
+            if (anony.equals("anon"))
+                anon.add(true);
+            else
+                anon.add(false);
         }
         commands.trimToSize();
         say.trimToSize();
@@ -262,13 +270,20 @@ public final class ChatShortcuts extends JavaPlugin
         style.trimToSize();
         con.trimToSize();
         play.trimToSize();
+        anon.trimToSize();
         for (int counter = 0; counter < commands.size(); counter++)
         {
             if (cmd.getName().equalsIgnoreCase(commands.get(counter)))
             {
                 if (!(sender instanceof Player) && con.get(counter))
                 {
-                    cmd.broadcastCommandMessage(sender, color.get(counter) + style.get(counter) + say.get(counter));
+                    if (anon.get(counter))
+                    {
+                        cmd.broadcastCommandMessage(sender, color.get(counter) + style.get(counter) + say.get(counter));
+                    }
+                    else
+                        getServer().dispatchCommand(sender, "say §R" + color.get(counter) + style.get(counter) + say.get(counter));
+                        
                     command = true;
                 }
                 else if (!(sender instanceof Player) && !(con.get(counter)))
@@ -281,7 +296,19 @@ public final class ChatShortcuts extends JavaPlugin
                     Player player = (Player) sender;
                     if (player.hasPermission(perm.get(counter)) && play.get(counter))
                     {
-                        player.chat("§R" + color.get(counter) + style.get(counter) + say.get(counter));
+                        String playername = "";
+                        String playerAnonymous = "§K";
+                        if (anon.get(counter))
+                        {
+                            playername = player.getDisplayName();
+                            player.setDisplayName(playerAnonymous + playername + "§R");
+                            player.chat("§R" + color.get(counter) + style.get(counter) + say.get(counter));
+                            player.setDisplayName(playername);
+                        }
+                        else                            
+                        {
+                            player.chat("§R" + color.get(counter) + style.get(counter) + say.get(counter));
+                        }
                         command = true;
                     }
                     else if (player.hasPermission(perm.get(counter)) && !(play.get(counter)))
