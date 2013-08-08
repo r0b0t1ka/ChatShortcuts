@@ -41,10 +41,7 @@ public final class ChatShortcuts extends JavaPlugin
     @SuppressWarnings("empty-statement")
     public void writethem() throws IOException
     {
-        File file = new File("wtf.txt");
-        String filepath = file.getCanonicalPath();
-        filepath = filepath.replace("\\wtf.txt", "");
-        boolean dirMake = new File(filepath + "\\plugins\\ChatShortcuts").mkdir();
+        boolean dirMake = new File(this.getDataFolder(), "").mkdir();
         if (!dirMake)
         {
             getLogger().info("Plugin folder already exits or couldn't be created");
@@ -52,25 +49,25 @@ public final class ChatShortcuts extends JavaPlugin
         if (dirMake)
         {
             getLogger().info("Plugin folder successfully created!");
-            dirMake = new File(filepath + "\\plugins\\ChatShortcuts\\commands.yml").createNewFile();
+            dirMake = new File(this.getDataFolder(), "commands.yml").createNewFile();
             if (!dirMake)
                 getLogger().info("OK, something is wrong, plugin couldn't create commands.yml");
-            dirMake = new File(filepath + "\\plugins\\ChatShortcuts\\plugin.yml").createNewFile();
+            dirMake = new File(this.getDataFolder(), "plugins.yml").createNewFile();
             if (!dirMake)
                 getLogger().info("OK, something is wrong, plugin couldn't create plugin.yml");
-            try (PrintWriter writing = new PrintWriter(new File (filepath + "\\plugins\\ChatShortcuts\\commands.yml"))) {
+            try (PrintWriter writing = new PrintWriter(new File (this.getDataFolder(), "commands.yml"))) {
                 writing.println("eg|ChatShortcuts command example!|eg|orange||console|player||");
             }
         }
         Scanner in;
-        try (PrintWriter writer = new PrintWriter(new File(filepath + "\\plugins\\ChatShortcuts\\plugin.yml"))) {
+        try (PrintWriter writer = new PrintWriter(new File(this.getDataFolder(), "plugin.yml"))) {
             writer.println("name: ChatShortcuts");
             writer.println("main: r0b0t1ka.ChatShortcuts.ChatShortcuts");
             writer.println("version: 1.3");
             writer.println("author: r0b0t1ka");
             writer.println("commands:");
             ArrayList<String> commands = new ArrayList<>();
-            in = new Scanner(new File(filepath + "\\plugins\\ChatShortcuts\\commands.yml"));
+            in = new Scanner(new File(this.getDataFolder(), "commands.yml"));
             while(in.hasNextLine())
             {
                 String fileIn = in.nextLine();
@@ -132,17 +129,9 @@ public final class ChatShortcuts extends JavaPlugin
         ArrayList<Boolean> con = new ArrayList<>();
         ArrayList<Boolean> play = new ArrayList<>();
         ArrayList<Boolean> anon = new ArrayList<>();
-        File file = new File("wtf.txt");
-        String filepath = null;
-        try {
-            filepath = file.getCanonicalPath();
-        } catch (IOException ex) {
-            Logger.getLogger(ChatShortcuts.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        filepath = filepath.replace("\\wtf.txt", "");        
         Scanner in = null;
         try {
-            in = new Scanner(new File(filepath + "\\plugins\\ChatShortcuts\\commands.yml"));
+            in = new Scanner(new File(this.getDataFolder(), "commands.yml"));
         } catch (FileNotFoundException ex) {
             Logger.getLogger(ChatShortcuts.class.getName()).log(Level.SEVERE, null, ex);
         }
